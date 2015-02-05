@@ -14,19 +14,32 @@ function headerView(scope) {
 }
 
 function todoView(todo, scope) {
-  return m(todo.done ? 'li.completed' : 'li', [
+  var classNames = ['li'];
+  if (todo.done) {
+    classNames.push('completed');
+  }
+  if (todo.isEditing) {
+    classNames.push('editing');
+  }
+  return m(classNames.join('.'), [
     m('.view', [
       m('input.toggle', {
         type: 'checkbox',
         onchange: scope.updateDoneState(todo)
       }),
-      m('label', todo.label),
+      m('label', {
+        ondblclick: function() {
+          todo.isEditing = true;
+        }
+      }, todo.label),
       m('button.destroy', {
         onclick: scope.remove(todo)
       })
     ]),
     m('input.edit', {
-      value: todo.label
+      value: todo.label,
+      oninput: scope.updateLabel(todo),
+      onkeypress: scope.leaveEditModeOnEnter(todo)
     })
   ]);
 }
@@ -98,6 +111,20 @@ var todos = {
       if (event.keyCode === 13) {
         scope.saveTodo();
       }
+    };
+
+    scope.leaveEditModeOnEnter = function(todo) {
+      return function(event) {
+        if (event.keyCode === 13) {
+          todo.isEditing = false;
+        }
+      };
+    };
+
+    scope.updateLabel = function(todo) {
+      return function(event) {
+        todo.label = event.target.value;
+      };
     };
 
     scope.updateDoneState = function(todo) {
