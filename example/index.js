@@ -5,7 +5,10 @@ function headerView(scope) {
     m('h1', 'todos'),
     m('input#new-todo', {
       placeholder: 'What needs to be done?',
-      autofocus: ''
+      autofocus: '',
+      oninput: scope.onInput,
+      onkeypress: scope.submitOnEnter,
+      value: scope.newTodo.label
     })
   ]);
 }
@@ -58,18 +61,40 @@ function undone(todo) {
 
 var todos = {
   controller: function() {
-    var scope = {
-      todos: [{
-        label: 'learn mithril!',
-        done: false
-      }, {
-        label: 'relax!',
-        done: false
-      }],
-      get countUndone() {
-        return scope.todos.filter(undone).length;
+    var scope = {};
+
+    scope.newTodo = { label: '', done: false };
+
+    scope.todos = [{
+      label: 'learn mithril!',
+      done: false
+    }, {
+      label: 'relax!',
+      done: false
+    }];
+
+    scope.saveTodo = function() {
+      if (!scope.newTodo.label) {
+        return;
+      }
+      scope.todos.push(scope.newTodo);
+      scope.newTodo = { label: '', done: false };
+    };
+
+    scope.__defineGetter__('countUndone', function() {
+      return scope.todos.filter(undone).length;
+    });
+
+    scope.onInput = function(event) {
+      scope.newTodo.label = event.target.value;
+    };
+
+    scope.submitOnEnter = function(event) {
+      if (event.keyCode === 13) {
+        scope.saveTodo();
       }
     };
+
     return scope;
   },
   view: function(scope) {
