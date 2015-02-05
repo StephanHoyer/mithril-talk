@@ -13,28 +13,31 @@ function headerView(scope) {
   ]);
 }
 
-function todoView(todo) {
-  return m('li', [
+function todoView(todo, scope) {
+  return m(todo.done ? 'li.completed' : 'li', [
     m('.view', [
       m('input.toggle', {
-        type: 'checkbox'
+        type: 'checkbox',
+        onchange: scope.updateDoneState(todo)
       }),
       m('label', todo.label),
       m('button.destroy')
     ]),
     m('input.edit', {
-      value: 'learn mithril'
+      value: todo.label
     })
   ]);
 }
 
 function mainView(scope) {
-  return m('main', [
+  return m('section#main', [
     m('input#toggle-all[type=checkbox]'),
     m('label', {
       for: 'toggle-all'
     }, 'Mark all as complete'),
-    m('ul#todo-list', scope.todos.map(todoView))
+    m('ul#todo-list', scope.todos.map(function(todo) {
+      return todoView(todo, scope);
+    }))
   ]);
 }
 
@@ -93,6 +96,12 @@ var todos = {
       if (event.keyCode === 13) {
         scope.saveTodo();
       }
+    };
+
+    scope.updateDoneState = function(todo) {
+      return function(event) {
+        todo.done = event.target.checked;
+      };
     };
 
     return scope;
