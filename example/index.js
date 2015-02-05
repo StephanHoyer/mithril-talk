@@ -21,7 +21,9 @@ function todoView(todo, scope) {
         onchange: scope.updateDoneState(todo)
       }),
       m('label', todo.label),
-      m('button.destroy')
+      m('button.destroy', {
+        onclick: scope.remove(todo)
+      })
     ]),
     m('input.edit', {
       value: todo.label
@@ -101,6 +103,12 @@ var todos = {
     scope.updateDoneState = function(todo) {
       return function(event) {
         todo.done = event.target.checked;
+      };
+    };
+
+    scope.remove = function(todo) {
+      return function(event) {
+        scope.todos.splice(scope.todos.indexOf(todo), 1);
       };
     };
 
