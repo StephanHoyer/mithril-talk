@@ -15,6 +15,7 @@ todoApp.view = function (ctrl) {
     return [
         m.component( header ),
         m( 'section#main', [
+            // we could put this input in another component if we wanted to
             m( 'input#toggle-all[type=checkbox]', {
                 onchange: m.withAttr('checked', ctrl.completeAll)
             } ),
@@ -28,7 +29,7 @@ todoApp.view = function (ctrl) {
 };
 
 
-m.route.mode = 'hash';
+m.route.mode = 'hash'; // use # based routing instead of the default ? based one
 m.route(document.getElementById('todoapp') , '/', {
   '/': todoApp,
   '/active': todoApp,

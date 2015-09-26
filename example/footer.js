@@ -10,6 +10,11 @@ footer.controller = function(){
     };
 };
 
+// Notice here that m.route can be used as a config function
+// In that case it makes sure that the href of the virtual dom element
+// anchors to the correct link (depends on m.route.mode) so href=/active becomes href=/?/active
+// this ensures that ctrl-clicking a link actually works
+
 footer.view = function(ctrl){
     var undone = ctrl.countUndone();
     return m('footer#footer', [
