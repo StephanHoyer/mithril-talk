@@ -17,6 +17,8 @@ var todoList = {
                     ( m.route() == '/active' && !todo.done() ) ||
                     ( m.route() === '/' );
             } ).map( function ( _todo ) {
+                // this is where it comes in handy having a key property on our todos
+                // if we did not, then checkboxes might not update correctly
                 return m.component( todo, _todo );
             } )
         ] );
