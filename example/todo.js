@@ -1,3 +1,8 @@
+/*
+ * Notice that the controller has an isEditing property
+ * the reasoning is that this belongs in the view-model rather than the model itself
+ */
+
 var todo = {
     controller: function ( todo, submit ) {
         this.isEditing = false;
@@ -8,14 +13,13 @@ var todo = {
         };
     },
     view: function ( ctrl, todo ) {
-        var classNames = [ 'li' ];
-        if ( todo.done() ) {
-            classNames.push( 'completed' );
-        }
-        if ( ctrl.isEditing ) {
-            classNames.push( 'editing' );
-        }
-        return m( classNames.join( '.' ), [
+        return m( 'li', {
+            // a pattern for dynamic class names
+            className: [
+                todo.done() ? 'completed' : '',
+                ctrl.isEditing ? 'editing' : ''
+            ].join(' ')
+        }, [
             m( '.view', [
                 //checkbox input two way data bound to todo.done
                 m( 'input.toggle', {

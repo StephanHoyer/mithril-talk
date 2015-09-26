@@ -5,9 +5,8 @@ var todoList = {
         if ( todoList.list().length ) {
             return;
         }
-        this.list = m.prop( [] );
         Todo.list()
-            .then( todoList.list );
+            .then( this.list );
     },
     list: m.prop( [] ),
     view: function ( ctrl ) {
